@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание МБОУ "ЗСОШ"</title>
+    <style>
+        /* --- Общие настройки --- */
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 { margin-bottom: 10px; font-size: 2.5rem; color: #ffffff; text-align: center; }
+        p.subtitle { margin-top: 0; margin-bottom: 40px; color: #aaaaaa; font-size: 1.1rem; text-align: center; }
+
+        /* --- Контейнер кнопок --- */
+        .schedule-container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 15px; }
+
+        /* --- Основная кнопка класса --- */
+        .class-btn {
+            background-color: #1f1f1f; color: #ffffff; border: 1px solid #333;
+            padding: 20px; font-size: 1.2rem; cursor: pointer; border-radius: 8px;
+            text-align: left; transition: background-color 0.2s; width: 100%; position: relative;
+        }
+        .class-btn:hover { background-color: #2c2c2c; }
+        .class-btn:after { content: '+'; position: absolute; right: 20px; font-weight: bold; }
+        .class-btn.active { background-color: #2c3e50; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+        .class-btn.active:after { content: '-'; }
+
+        /* --- Подменю --- */
+        .sub-menu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: #181818; border-radius: 0 0 8px 8px; }
+        .sub-menu-content { padding: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; border: 1px solid #333; border-top: none; }
+
+        .sub-btn {
+            background-color: #383838; color: #fff; border: none; padding: 12px;
+            border-radius: 5px; cursor: pointer; transition: background 0.2s; font-size: 0.95rem;
+        }
+        .sub-btn:hover { background-color: #4CAF50; }
+        .profile-btn { font-size: 0.85rem; }
+
+        /* --- Модальное окно --- */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: #1e1e1e; margin: 5% auto; padding: 20px;
+            border: 1px solid #444; width: 90%; max-width: 800px;
+            border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            animation: slideDown 0.3s;
+        }
+        @keyframes slideDown { from {transform: translateY(-50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-btn:hover { color: #fff; }
+
+        /* --- Таблица --- */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #444; padding: 12px; text-align: left; }
+        th { background-color: #333; color: #4CAF50; }
+        td { background-color: #252525; }
+        td[contenteditable="true"]:focus { background-color: #333; outline: 2px solid #4CAF50; }
+        .day-header { background-color: #2c3e50; text-align: center; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+    </style>
+</head>
+<body>
+
+    <h1>МБОУ "ЗСОШ"</h1>
+    <p class="subtitle">Этот сайт содержит школьное расписание для всех классов</p>
+
+    <div class="schedule-container">
+        <div>
+            <button class="class-btn">5 Класс</button>
+            <div class="sub-menu"><div class="sub-menu-content">
+                <button class="sub-btn">5 "А"</button><button class="sub-btn">5 "Б"</button>
+                <button class="sub-btn">5 "В"</button><button class="sub-btn">5 "Г"</button>
+            </div></div>
+        </div>
+        <div>
+            <button class="class-btn">6 Класс</button>
+            <div class="sub-menu"><div class="sub-menu-content">
+                <button class="sub-btn">6 "А"</button><button class="sub-btn">6 "Б"</button>
+                <button class="sub-btn">6 "В"</button><button class="sub-btn">6 "Г"</button>
+            </div></div>
+        </div>
+        <div>
+            <button class="class-btn">7 Класс</button>
+            <div class="sub-menu"><div class="sub-menu-content">
+                <button class="sub-btn">7 "А"</button><button class="sub-btn">7 "Б"</button>
+                <button class="sub-btn">7 "В"</button><button class="sub-btn">7 "Г"</button>
+            </div></div>
+        </div>
+        <div>
+            <button class="class-btn">8 Класс</button>
+            <div class="sub-menu"><div class="sub-menu-content">
+                <button class="sub-btn">8 "А"</button><button class="sub-btn">8 "Б"</button>
+                <button class="sub-btn">8 "В"</button><button class="sub-btn">8 "Г"</button>
+            </div></div>
+        </div>
+        <div>
+            <button class="class-btn">9 Класс</button>
+            <div class="sub-menu"><div class="sub-menu-content">
+                <button class="sub-btn">9 "А"</button><button class="sub-btn">9 "Б"</button>
+                <button class="sub-btn">9 "В"</button><button class="sub-btn">9 "Г"</button>
+            </div></div>
+        </div>
+        <div>
+            <button class="class-btn">10 Класс</button>
+            <div class="sub-menu"><div class="sub-menu-content">
+                <button class="sub-btn profile-btn">Технологический</button>
+                <button class="sub-btn profile-btn">Гуманитарный</button>
+                <button class="sub-btn profile-btn">Универсальный</button>
+            </div></div>
+        </div>
+        <div>
+            <button class="class-btn">11 Класс</button>
+            <div class="sub-menu"><div class="sub-menu-content">
+                <button class="sub-btn profile-btn">Технологический</button>
+                <button class="sub-btn profile-btn">Гуманитарный</button>
+                <button class="sub-btn profile-btn">Естеств.-науч.</button>
+            </div></div>
+        </div>
+    </div>
+
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modalTitle" style="text-align:center; color: #4CAF50;">Расписание</h2>
+            <p style="text-align:center; font-size:0.9rem; color:#888;">Вы можете редактировать ячейки, нажав на них</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th width="10%">№</th>
+                        <th width="65%">Предмет</th>
+                        <th width="25%">Кабинет</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // --- БАЗА ДАННЫХ РАСПИСАНИЯ ---
+        // Здесь мы храним расписание для классов.
+        const schedules = {
+            '9 "Г"': {
+                "Понедельник": [
+                    "Разговоры о важном",
+                    "История",
+                    "Основы безопасности и защиты Родины",
+                    "Биология",
+                    "Алгебра",
+                    "Русский язык",
+                    "Английский язык"
+                ],
+                "Вторник": [
+                    "Вероятность и статистика",
+                    "Русский язык",
+                    "География",
+                    "Химия",
+                    "Труд (технология)",
+                    "Физическая культура",
+                    "Литература"
+                ],
+                "Среда": [
+                    "Физическая культура",
+                    "История",
+                    "Алгебра",
+                    "Информатика и ИКТ",
+                    "Литература",
+                    "Физика",
+                    "Биология"
+                ],
+                "Четверг": [
+                    "Физика",
+                    "Химия",
+                    "География",
+                    "История",
+                    "Английский язык",
+                    "Алгебра",
+                    "Россия - мои горизонты"
+                ],
+                "Пятница": [
+                    "Физика",
+                    "Английский язык",
+                    "Геометрия",
+                    "Геометрия",
+                    "Русский язык",
+                    "Литература",
+                    "Обществознание"
+                ]
+            }
+        };
+
+        // --- 1. Логика кнопок (Аккордеон) ---
+        var acc = document.getElementsByClassName("class-btn");
+        for (var i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                } 
+            });
+        }
+
+        // --- 2. Логика Модального окна ---
+        var modal = document.getElementById("scheduleModal");
+        var span = document.getElementsByClassName("close-btn")[0];
+        var modalTitle = document.getElementById("modalTitle");
+        var subBtns = document.getElementsByClassName("sub-btn");
+        var tableBody = document.getElementById("tableBody");
+
+        // Функция генерации таблицы
+        function generateScheduleTable(className) {
+            let html = "";
+            const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница"];
+            
+            // Проверяем, есть ли готовое расписание для этого класса в нашей "Базе"
+            const classData = schedules[className];
+
+            days.forEach(day => {
+                html += `<tr><td colspan="3" class="day-header">${day}</td></tr>`;
+                
+                // Получаем список уроков на этот день (если есть) или создаем пустой массив
+                const lessons = (classData && classData[day]) ? classData[day] : [];
+
+                // Генерируем 7 строк уроков
+                for(let i = 0; i < 7; i++) {
+                    // Берем предмет из массива или оставляем пустым, если урока нет
+                    let subject = lessons[i] ? lessons[i] : "";
+                    
+                    html += `
+                        <tr>
+                            <td style="text-align:center;">${i + 1}</td>
+                            <td contenteditable="true">${subject}</td>
+                            <td contenteditable="true" style="text-align:center;"></td>
+                        </tr>
+                    `;
+                }
+            });
+            return html;
+        }
+
+        // Обработчик клика по кнопке класса (А, Б, В...)
+        for (var j = 0; j < subBtns.length; j++) {
+            subBtns[j].addEventListener("click", function() {
+                // Получаем название класса с кнопки
+                let currentClass = this.innerText;
+                
+                modalTitle.innerText = "Расписание: " + currentClass;
+                tableBody.innerHTML = generateScheduleTable(currentClass);
+                modal.style.display = "block";
+            });
+        }
+
+        span.onclick = function() { modal.style.display = "none"; }
+        window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
+    </script>
+
+</body>
+</html>
